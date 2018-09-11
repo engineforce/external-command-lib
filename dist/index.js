@@ -266,7 +266,7 @@ function exec(commandParts, options = {}) {
     cwd: options.workingDir,
     env: process.env,
     shell: true,
-    stdio: ['ignore', 'pipe', 'pipe']
+    stdio: ['inherit', 'pipe', 'pipe']
   });
   let outputMessage = '';
   let errorMessage = '';
