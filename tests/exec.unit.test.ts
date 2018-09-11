@@ -1,4 +1,4 @@
-import { exec } from '..';
+import { exec } from '../src/exec';
 
 beforeEach(() => {
   const logger = require('loglevel');

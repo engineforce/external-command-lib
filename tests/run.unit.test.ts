@@ -1,4 +1,4 @@
-import { run } from '..';
+import { run } from '../src/run';
 
 beforeEach(() => {
   const logger = require('loglevel');
