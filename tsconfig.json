@@ -1,0 +1,9 @@
+{
+  "extends": "../../packages/build-config/tsconfig.base",
+  "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom"
+    ]
+  }
+}
