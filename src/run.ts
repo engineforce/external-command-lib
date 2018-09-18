@@ -1,24 +1,43 @@
 import cp from 'child_process';
-import { ITask, IRunOptions } from './IOptions';
+import { ITask } from './IOptions';
 import { Task } from './Task';
-import logger from 'loglevel';
 
-export function run(commandParts: string[], options: IRunOptions = {}): ITask {
-  logger.info(`Execute ${commandParts.join(' ')} ${options.workingDir}`);
+export const run = (initOptions?: IRunInitOptions) => {
+  initOptions = initOptions || {
+    logger: {
+      info: console.info
+    }
+  };
+  return (commandParts: string[], options: IRunOptions = {}): ITask => {
+    initOptions.logger.info(
+      `Execute ${commandParts.join(' ')} ${options.workingDir}`
+    );
 
-  const childProcess = cp.exec(commandParts.join(' '), {
-    cwd: options.workingDir,
-  });
+    const childProcess = cp.exec(commandParts.join(' '), {
+      cwd: options.workingDir
+    });
 
-  // const childProcess = cp.spawn(
-  //     commandParts[0],
-  //     _.takeRight(commandParts, commandParts.length - 1),
-  //     {
-  //         cwd: workingDir,
-  //         env: process.env,
-  //         shell: true
-  //     }
-  // );
+    // const childProcess = cp.spawn(
+    //     commandParts[0],
+    //     _.takeRight(commandParts, commandParts.length - 1),
+    //     {
+    //         cwd: workingDir,
+    //         env: process.env,
+    //         shell: true
+    //     }
+    // );
 
-  return new Task(childProcess, options.timeout);
+    return new Task(childProcess, options.timeout, initOptions.logger);
+  };
+};
+
+export interface IRunInitOptions {
+  logger: {
+    info: (message: string) => void;
+  };
+}
+
+export interface IRunOptions {
+  workingDir?: string;
+  timeout?: number;
 }

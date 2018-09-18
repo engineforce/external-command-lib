@@ -2,12 +2,15 @@ import { ITaskCompleteInfo, ITask, IOutput } from './IOptions';
 import treeKill from 'tree-kill';
 import cp from 'child_process';
 import EventEmitter from 'events';
-import logger from 'loglevel';
 
 export class Task implements ITask {
   private _eventEmitter = new EventEmitter();
 
-  constructor(private _childProcess: cp.ChildProcess, timeout: number) {
+  constructor(
+    private _childProcess: cp.ChildProcess,
+    timeout: number,
+    private _logger: { info: (message: string) => void }
+  ) {
     let killTimer: any;
     if (timeout > 0) {
       killTimer = setTimeout(() => {
@@ -15,16 +18,16 @@ export class Task implements ITask {
       }, timeout);
     }
 
-    _childProcess.stdout.on('data', (data) => {
+    _childProcess.stdout.on('data', data => {
       this._eventEmitter.emit('outputChanged', {
         source: 'stdout',
-        message: data.toString(),
+        message: data.toString()
       });
     });
-    _childProcess.stderr.on('data', (data) => {
+    _childProcess.stderr.on('data', data => {
       this._eventEmitter.emit('outputChanged', {
         source: 'stderr',
-        message: data.toString(),
+        message: data.toString()
       });
     });
     _childProcess.on('exit', (code, signal) => {
@@ -37,7 +40,7 @@ export class Task implements ITask {
       setTimeout(() => {
         this._eventEmitter.emit('completed', {
           code,
-          signal,
+          signal
         });
       }, 0);
     });
@@ -49,7 +52,9 @@ export class Task implements ITask {
 
   kill(signal?: string) {
     setTimeout(() => {
-      logger.info(`Kill ${this._childProcess.pid} with ${signal} signal.`);
+      this._logger.info(
+        `Kill ${this._childProcess.pid} with ${signal} signal.`
+      );
 
       treeKill(this._childProcess.pid, signal);
 

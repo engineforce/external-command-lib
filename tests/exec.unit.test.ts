@@ -1,9 +1,7 @@
-import { exec } from '../src/exec';
+import { exec as _exec } from '../src/exec';
+import _ from 'lodash';
 
-beforeEach(() => {
-  const logger = require('loglevel');
-  logger.disableAll();
-});
+const exec = _exec({ logger: { info: _.noop, error: _.noop } });
 
 test('echo hello world should pass', async () => {
   let result = await exec('echo hello world'.split(' '));
