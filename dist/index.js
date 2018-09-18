@@ -82,23 +82,11 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!***************************!*\
-  !*** external "loglevel" ***!
-  \***************************/
-/*! no static exports found */
-/*! exports used: default */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-module.exports = require("loglevel");
-
-/***/ }),
-/* 1 */
 /*!********************************!*\
   !*** external "child_process" ***!
   \********************************/
@@ -110,7 +98,7 @@ module.exports = require("loglevel");
 module.exports = require("child_process");
 
 /***/ }),
-/* 2 */
+/* 1 */
 /*!*************************!*\
   !*** external "lodash" ***!
   \*************************/
@@ -122,7 +110,7 @@ module.exports = require("child_process");
 module.exports = require("lodash");
 
 /***/ }),
-/* 3 */
+/* 2 */
 /*!****************************!*\
   !*** external "tree-kill" ***!
   \****************************/
@@ -134,7 +122,7 @@ module.exports = require("lodash");
 module.exports = require("tree-kill");
 
 /***/ }),
-/* 4 */
+/* 3 */
 /*!*************************!*\
   !*** external "events" ***!
   \*************************/
@@ -146,7 +134,7 @@ module.exports = require("tree-kill");
 module.exports = require("events");
 
 /***/ }),
-/* 5 */
+/* 4 */
 /*!************************!*\
   !*** multi ./index.js ***!
   \************************/
@@ -155,11 +143,11 @@ module.exports = require("events");
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/libs/packages/external-command-lib/index.js */6);
+module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/delivery/packages/external-command-lib/index.js */5);
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /*!******************************!*\
   !*** ./index.js + 3 modules ***!
   \******************************/
@@ -168,7 +156,6 @@ module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/libs/p
 /*! ModuleConcatenation bailout: Cannot concat with external "child_process" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "events" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "lodash" (<- Module is not an ECMAScript module) */
-/*! ModuleConcatenation bailout: Cannot concat with external "loglevel" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "tree-kill" (<- Module is not an ECMAScript module) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -176,31 +163,27 @@ module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/libs/p
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: external "child_process"
-var external_child_process_ = __webpack_require__(1);
+var external_child_process_ = __webpack_require__(0);
 var external_child_process_default = /*#__PURE__*/__webpack_require__.n(external_child_process_);
 
 // EXTERNAL MODULE: external "lodash"
-var external_lodash_ = __webpack_require__(2);
+var external_lodash_ = __webpack_require__(1);
 
 // EXTERNAL MODULE: external "tree-kill"
-var external_tree_kill_ = __webpack_require__(3);
+var external_tree_kill_ = __webpack_require__(2);
 var external_tree_kill_default = /*#__PURE__*/__webpack_require__.n(external_tree_kill_);
 
 // EXTERNAL MODULE: external "events"
-var external_events_ = __webpack_require__(4);
+var external_events_ = __webpack_require__(3);
 var external_events_default = /*#__PURE__*/__webpack_require__.n(external_events_);
-
-// EXTERNAL MODULE: external "loglevel"
-var external_loglevel_ = __webpack_require__(0);
-var external_loglevel_default = /*#__PURE__*/__webpack_require__.n(external_loglevel_);
 
 // CONCATENATED MODULE: ./src/Task.js
 
 
-
 class Task_Task {
-  constructor(_childProcess, timeout) {
+  constructor(_childProcess, timeout, _logger) {
     this._childProcess = _childProcess;
+    this._logger = _logger;
     this._eventEmitter = new external_events_default.a();
     let killTimer;
 
@@ -245,7 +228,8 @@ class Task_Task {
 
   kill(signal) {
     setTimeout(() => {
-      external_loglevel_default.a.info(`Kill ${this._childProcess.pid} with ${signal} signal.`);
+      this._logger.info(`Kill ${this._childProcess.pid} with ${signal} signal.`);
+
       external_tree_kill_default()(this._childProcess.pid, signal); // Non of following works, because they don't kill the process tree.
       //cp.spawn("kill", [this._childProcess.pid.toString()]);
       //process.kill(this._childProcess.pid, signal);
@@ -258,58 +242,71 @@ class Task_Task {
 
 
 
-
-function exec(commandParts, options = {}) {
-  let command = commandParts.join(' ');
-  external_loglevel_default.a.info(`Execute "${command}" "${options.workingDir}"`);
-  const childProcess = external_child_process_default.a.spawn(commandParts[0], Object(external_lodash_["takeRight"])(commandParts, commandParts.length - 1), {
-    cwd: options.workingDir,
-    env: process.env,
-    shell: true,
-    stdio: ['inherit', 'pipe', 'pipe']
-  });
-  let outputMessage = '';
-  let errorMessage = '';
-  return new Promise((resolve, reject) => {
-    let task = new Task_Task(childProcess, options.timeout);
-    task.on('outputChanged', output => {
-      outputMessage += output.message;
-
-      if (output.source == 'stderr') {
-        errorMessage += output.message;
-      }
+const exec = initOptions => {
+  initOptions = initOptions || {
+    logger: {
+      info: console.info,
+      error: console.error
+    }
+  };
+  return (commandParts, options = {}) => {
+    let command = commandParts.join(' ');
+    initOptions.logger.info(`Execute "${command}" "${options.workingDir}"`);
+    const childProcess = external_child_process_default.a.spawn(commandParts[0], Object(external_lodash_["takeRight"])(commandParts, commandParts.length - 1), {
+      cwd: options.workingDir,
+      env: process.env,
+      shell: true,
+      stdio: ['inherit', 'pipe', 'pipe']
     });
-    task.on('completed', info => {
-      if (info.code == 0) {
-        external_loglevel_default.a.info(`Pass: ${command}\n ${outputMessage}`);
-        resolve(outputMessage);
-      } else {
-        external_loglevel_default.a.error(`Error: ${command}\n${errorMessage}\n ${outputMessage}`);
-        reject(errorMessage);
-      }
+    let outputMessage = '';
+    let errorMessage = '';
+    return new Promise((resolve, reject) => {
+      let task = new Task_Task(childProcess, options.timeout, initOptions.logger);
+      task.on('outputChanged', output => {
+        outputMessage += output.message;
+
+        if (output.source == 'stderr') {
+          errorMessage += output.message;
+        }
+      });
+      task.on('completed', info => {
+        if (info.code == 0) {
+          initOptions.logger.info(`Pass: ${command}\n ${outputMessage}`);
+          resolve(outputMessage);
+        } else {
+          initOptions.logger.error(`Error: ${command}\n${errorMessage}\n ${outputMessage}`);
+          reject(errorMessage);
+        }
+      });
     });
-  });
-}
+  };
+};
 // CONCATENATED MODULE: ./src/run.js
 
 
+const run = initOptions => {
+  initOptions = initOptions || {
+    logger: {
+      info: console.info
+    }
+  };
+  return (commandParts, options = {}) => {
+    initOptions.logger.info(`Execute ${commandParts.join(' ')} ${options.workingDir}`);
+    const childProcess = external_child_process_default.a.exec(commandParts.join(' '), {
+      cwd: options.workingDir
+    }); // const childProcess = cp.spawn(
+    //     commandParts[0],
+    //     _.takeRight(commandParts, commandParts.length - 1),
+    //     {
+    //         cwd: workingDir,
+    //         env: process.env,
+    //         shell: true
+    //     }
+    // );
 
-function run(commandParts, options = {}) {
-  external_loglevel_default.a.info(`Execute ${commandParts.join(' ')} ${options.workingDir}`);
-  const childProcess = external_child_process_default.a.exec(commandParts.join(' '), {
-    cwd: options.workingDir
-  }); // const childProcess = cp.spawn(
-  //     commandParts[0],
-  //     _.takeRight(commandParts, commandParts.length - 1),
-  //     {
-  //         cwd: workingDir,
-  //         env: process.env,
-  //         shell: true
-  //     }
-  // );
-
-  return new Task_Task(childProcess, options.timeout);
-}
+    return new Task_Task(childProcess, options.timeout, initOptions.logger);
+  };
+};
 // CONCATENATED MODULE: ./index.js
 /* concated harmony reexport exec */__webpack_require__.d(__webpack_exports__, "exec", function() { return exec; });
 /* concated harmony reexport run */__webpack_require__.d(__webpack_exports__, "run", function() { return run; });
