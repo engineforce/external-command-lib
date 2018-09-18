@@ -151,7 +151,7 @@ module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/delive
 /*!******************************!*\
   !*** ./index.js + 3 modules ***!
   \******************************/
-/*! exports provided: exec, run */
+/*! exports provided: exec, run, Task */
 /*! all exports used */
 /*! ModuleConcatenation bailout: Cannot concat with external "child_process" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "events" (<- Module is not an ECMAScript module) */
@@ -310,6 +310,8 @@ const run = initOptions => {
 // CONCATENATED MODULE: ./index.js
 /* concated harmony reexport exec */__webpack_require__.d(__webpack_exports__, "exec", function() { return exec; });
 /* concated harmony reexport run */__webpack_require__.d(__webpack_exports__, "run", function() { return run; });
+/* concated harmony reexport Task */__webpack_require__.d(__webpack_exports__, "Task", function() { return Task_Task; });
+
 
 
 
