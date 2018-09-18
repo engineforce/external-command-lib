@@ -1,4 +1,3 @@
-import { ITaskCompleteInfo, ITask, IOutput } from './IOptions';
 import treeKill from 'tree-kill';
 import cp from 'child_process';
 import EventEmitter from 'events';
@@ -64,4 +63,20 @@ export class Task implements ITask {
       //this._childProcess.kill(signal);
     }, 0);
   }
+}
+
+export interface ITaskCompleteInfo {
+  code: number;
+  signal: string;
+}
+
+export interface ITask {
+  kill(signal?: string): void;
+  on?(event: 'outputChanged', listener: (arg: IOutput) => void);
+  on?(event: 'completed', listener: (arg: ITaskCompleteInfo) => void);
+}
+
+export interface IOutput {
+  source: 'stdout' | 'stderr';
+  message: string;
 }

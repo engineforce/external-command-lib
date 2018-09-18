@@ -1,6 +1,5 @@
 import cp from 'child_process';
-import { ITask } from './IOptions';
-import { Task } from './Task';
+import { Task, ITask } from './Task';
 
 export const run = (initOptions?: IRunInitOptions) => {
   initOptions = initOptions || {

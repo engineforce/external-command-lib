@@ -1,5 +1,4 @@
 import cp from 'child_process';
-import { ITask } from './IOptions';
 import { takeRight } from 'lodash';
 import { Task } from './Task';
 import _ from 'lodash';
