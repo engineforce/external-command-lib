@@ -24,8 +24,6 @@
     "babel-jest": "^23.4.2",
     "jest": "^23.5.0",
     "poi": "^10.2.10",
-    "regenerator-runtime": "^0.12.1",
-    "typescript": "^3.1.6",
-    "webpack-node-externals": "^1.7.2"
+    "typescript": "^3.2.2"
   }
 }
