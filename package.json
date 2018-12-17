@@ -6,7 +6,7 @@
   "author": "Paul Li",
   "license": "UNLICENSED",
   "scripts": {
-    "test": "yarn run test-unit",
+    "test": "npm run test-unit",
     "test-unit": "jest --testPathPattern \\.unit\\.test\\.",
     "build": "tsc && poi build",
     "watch": "tsc -w"
