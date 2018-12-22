@@ -1,6 +1,6 @@
 {
   "name": "@engineforce/external-command-lib",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "External command lib",
   "main": "./dist/index.js",
   "author": "Paul Li",
