@@ -1,20 +1,10 @@
 {
-  "name": "@engineforce/external-command-lib",
-  "version": "0.1.6",
-  "description": "External command lib",
-  "main": "./dist/index.js",
   "author": "Paul Li",
-  "license": "UNLICENSED",
-  "scripts": {
-    "test": "npm run test-unit",
-    "test-unit": "jest --testPathPattern \\.unit\\.test\\.",
-    "build": "tsc && poi build",
-    "watch": "tsc -w"
-  },
   "dependencies": {
     "lodash": "^4.17.10",
     "tree-kill": "^1.2.0"
   },
+  "description": "External command lib",
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@engineforce/build-config": "github:engineforce/build-config",
@@ -25,5 +15,15 @@
     "jest": "^23.5.0",
     "poi": "^10.2.10",
     "typescript": "^3.2.2"
-  }
+  },
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "name": "@engineforce/external-command-lib",
+  "scripts": {
+    "build": "tsc && poi build",
+    "test": "npm run test-unit",
+    "test-unit": "jest --testPathPattern \\.unit\\.test\\.",
+    "watch": "tsc -w"
+  },
+  "version": "0.1.6"
 }
