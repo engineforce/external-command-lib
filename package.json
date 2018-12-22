@@ -25,5 +25,5 @@
     "test-unit": "jest --testPathPattern \\.unit\\.test\\.",
     "watch": "tsc -w"
   },
-  "version": "0.1.6"
+  "version": "0.1.7"
 }
